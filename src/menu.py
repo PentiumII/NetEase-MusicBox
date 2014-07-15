@@ -150,11 +150,15 @@ class Menu:
 
             # 播放下一曲
             elif key == ord(']'):
+                if len(self.presentsongs) == 0:
+                    continue
                 self.player.next()
                 time.sleep(0.1)
 
             # 播放上一曲
             elif key == ord('['):
+                if len(self.presentsongs) == 0:
+                    continue 
                 self.player.prev()
                 time.sleep(0.1)
 
