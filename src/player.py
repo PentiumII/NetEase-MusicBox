@@ -53,12 +53,17 @@ class Player:
         try:
             cover_path = os.path.expanduser('~') + \
                 '/netease-musicbox/cover.jpg'
-            command = 'curl "%s" > /dev/null 2>&1 > %s && \
-                    notify-send -i %s "%s-%s  %s" > /dev/null 2>&1' % \
-                (item['cover_url'], cover_path,
-                    cover_path, item['album_name'],
-                    item['song_name'], item['artist'])
-            os.system(command)
+            song_info = "%s-%s \n %s"  \
+                % (item['album_name'], item['song_name'], item['artist'])
+            with open(os.devnull, 'w') as fnull:
+                handler = subprocess.Popen(['curl', item['cover_url'], '-o', cover_path],
+                        stdout=fnull, stderr=subprocess.STDOUT)
+                handler.wait()
+                handler = subprocess.Popen(['convert', cover_path, '-resize', '150x150', cover_path],
+                        stdout=fnull, stderr=subprocess.STDOUT)
+                handler.wait()
+                handler = subprocess.Popen(['notify-send', '-i', cover_path, '-t', '3000', song_info], 
+                        stdout=fnull, stderr=subprocess.STDOUT)
         except:
             pass
 
