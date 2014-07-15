@@ -65,8 +65,11 @@ class Player:
                 handler = subprocess.Popen(['notify-send', '-i', cover_path, '-t', '3000', song_info], 
                         stdout=fnull, stderr=subprocess.STDOUT)
         except:
-            msg = 'display notification "' + item['artist'] + '   < ' + item['album_name'] + ' >' + '" with title "' + item['song_name'] +'"'
-            subprocess.Popen(['osascript', '-e', msg])
+            try:
+                msg = 'display notification "' + item['artist'] + '   < ' + item['album_name'] + ' >' + '" with title "' + item['song_name'] +'"'
+                subprocess.Popen(['osascript', '-e', msg])
+            except:
+                pass
 
     def recall(self):
         self.playing_flag = True
