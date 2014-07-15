@@ -12,16 +12,17 @@ import os
 import json
 import time
 import webbrowser
-from api import NetEase
-from player import Player
-from ui import Ui
+
+from .api import NetEase
+from .player import Player
+from .ui import Ui
 
 home = os.path.expanduser("~")
 if os.path.isdir(home + '/netease-musicbox') is False:
     os.mkdir(home+'/netease-musicbox')
 
 locale.setlocale(locale.LC_ALL, "")
-code = locale.getpreferredencoding()   
+code = locale.getpreferredencoding()
 
 # carousel x in [left, right]
 carousel = lambda left, right, x: left if (x>right) else (right if x<left else x)
@@ -75,7 +76,7 @@ class Menu:
             self.account = data['account']
             sfile.close()
         except:
-            self.collection = []        
+            self.collection = []
             self.account = {}
 
     def start(self):
@@ -130,7 +131,7 @@ class Menu:
                 self.ui.build_loading()
                 self.dispatch_enter(idx)
                 self.index = 0
-                self.offset = 0    
+                self.offset = 0
 
             # 回退
             elif key == ord('h'):
@@ -221,7 +222,7 @@ class Menu:
                     self.title = self.stack[0][1]
                     self.datalist = self.stack[0][2]
                     self.offset = 0
-                    self.index = 0                    
+                    self.index = 0
 
             elif key == ord('g'):
                 if datatype == 'help':
@@ -251,12 +252,12 @@ class Menu:
         self.stack.append( [datatype, title, datalist, offset, index])
 
         if datatype == 'main':
-            self.choice_channel(idx) 
+            self.choice_channel(idx)
 
         # 该艺术家的热门歌曲
         elif datatype == 'artists':
             artist_id = datalist[idx]['artist_id']
-            songs = netease.artists(artist_id)         
+            songs = netease.artists(artist_id)
             self.datatype = 'songs'
             self.datalist = netease.dig_info(songs, 'songs')
             self.title += ' > ' + datalist[idx]['artists_name']
@@ -305,7 +306,7 @@ class Menu:
             playlists = netease.top_playlists()
             self.datalist = netease.dig_info(playlists, 'playlists')
             self.title += ' > 精选歌单'
-            self.datatype = 'playlists'            
+            self.datatype = 'playlists'
 
         # 我的歌单
         elif idx == 4:
@@ -314,7 +315,7 @@ class Menu:
                 # 使用本地存储了账户登录
                 if self.account:
                     user_info = netease.login(self.account[0], self.account[1])
-                    
+
                 # 本地没有存储账户，或本地账户失效，则引导录入
                 if self.account == {} or user_info['code'] != 200:
                     data = self.ui.build_login()
@@ -361,7 +362,7 @@ class Menu:
             self.datalist = shortcut
 
         self.offset = 0
-        self.index = 0 
+        self.index = 0
 
     def search(self):
         ui = self.ui
@@ -391,4 +392,3 @@ class Menu:
             self.datatype = 'playlists'
             self.datalist = ui.build_search('playlists')
             self.title = '精选歌单搜索列表'
-

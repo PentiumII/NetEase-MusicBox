@@ -18,6 +18,7 @@ def uniq(arr):
     return arr2
 
 default_timeout = 10
+api_endpoint = 'http://music.163.com/api/'
 
 
 class NetEase:
@@ -36,7 +37,7 @@ class NetEase:
             'appver': '1.5.2'
         }
 
-    def httpRequest(self, method, action, query=None, urlencoded=None, callback=None, timeout=None):    
+    def httpRequest(self, method, action, query=None, urlencoded=None, callback=None, timeout=None):
         if(method == 'GET'):
             url = action if (query == None) else (action + '?' + query)
             connection = requests.get(url, headers=self.header, timeout=default_timeout)
@@ -55,7 +56,7 @@ class NetEase:
 
     # 登录
     def login(self, username, password):
-        action = 'http://music.163.com/api/login/'
+        action = '{0}login/'.format(api_endpoint)
         data = {
             'username': username,
             'password': hashlib.md5( password ).hexdigest(),
@@ -68,7 +69,7 @@ class NetEase:
 
     # 用户歌单
     def user_playlist(self, uid, offset=0, limit=100):
-        action = 'http://music.163.com/api/user/playlist/?offset=' + str(offset) + '&limit=' + str(limit) + '&uid=' + str(uid)
+        action = '{0}user/playlist/?offset={1}&limit={2}&uid={3}'.format(api_endpoint, offset, limit, uid)
         try:
             data = self.httpRequest('GET', action)
             return data['playlist']
@@ -77,7 +78,7 @@ class NetEase:
 
     # 搜索单曲(1)，歌手(100)，专辑(10)，歌单(1000)，用户(1002) *(type)*
     def search(self, s, stype=1, offset=0, total='true', limit=60):
-        action = 'http://music.163.com/api/search/get/web'
+        action = '{0}search/get/web'.format(api_endpoint)
         data = {
             's': s,
             'type': stype,
@@ -89,7 +90,7 @@ class NetEase:
 
     # 新碟上架 http://music.163.com/#/discover/album/
     def new_albums(self, offset=0, limit=50):
-        action = 'http://music.163.com/api/album/new?area=ALL&offset=' + str(offset) + '&total=true&limit=' + str(limit)
+        action = '{0}album/new?area=ALL&offset={1}&total=true&limit='.format(api_endpoint, offset, limit)
         try:
             data = self.httpRequest('GET', action)
             return data['albums']
@@ -98,7 +99,8 @@ class NetEase:
 
     # 歌单（网友精选碟） hot||new http://music.163.com/#/discover/playlist/
     def top_playlists(self, category='全部', order='hot', offset=0, limit=50):
-        action = 'http://music.163.com/api/playlist/list?cat=' + category + '&order=' + order + '&offset=' + str(offset) + '&total=' + ('true' if offset else 'false') + '&limit=' + str(limit)
+        total = 'true' if offset else 'false'
+        action = '{0}playlist/list?cat={1}&order={2}&offset={3}&total={4}&limit={5}'.format(api_endpoint, category, order, offset, total, limit)
         try:
             data = self.httpRequest('GET', action)
             return data['playlists']
@@ -107,7 +109,7 @@ class NetEase:
 
     # 歌单详情
     def playlist_detail(self, playlist_id):
-        action = 'http://music.163.com/api/playlist/detail?id=' + str(playlist_id)
+        action = '{0}playlist/detail?id={1}'.format(api_endpoint, playlist_id)
         try:
             data = self.httpRequest('GET', action)
             return data['result']['tracks']
@@ -116,7 +118,7 @@ class NetEase:
 
     # 热门歌手 http://music.163.com/#/discover/artist/
     def top_artists(self, offset=0, limit=100):
-        action = 'http://music.163.com/api/artist/top?offset=' + str(offset) + '&total=false&limit=' + str(limit)
+        action = '{0}artist/top?offset={1}&total=false&limit={2}'.format(api_endpoint, offset, limit)
         try:
             data = self.httpRequest('GET', action)
             return data['artists']
@@ -214,7 +216,7 @@ class NetEase:
                     'artist': [],
                     'song_name': data[i]['name'],
                     'album_name': data[i]['album']['name'],
-                    'mp3_url': data[i]['mp3Url']   
+                    'mp3_url': data[i]['mp3Url']
                 }
                 if 'artist' in data[i]:
                     song_info['artist'] = data[i]['artist']
@@ -255,7 +257,7 @@ class NetEase:
                     'playlists_name': data[i]['name'],
                     'creator_name': data[i]['creator']['nickname']
                 }
-                temp.append(playlists_info)        
+                temp.append(playlists_info)
 
 
         elif dig_type == 'channels':
@@ -266,6 +268,6 @@ class NetEase:
                 'album_name': 'DJ节目',
                 'mp3_url': data['mp3Url']
                 }
-            temp = channel_info    
+            temp = channel_info
 
         return temp

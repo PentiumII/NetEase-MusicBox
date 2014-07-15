@@ -11,7 +11,8 @@ import threading
 import time
 import os
 import signal
-from ui import Ui
+
+from .ui import Ui
 
 
 # carousel x in [left, right]
@@ -34,7 +35,7 @@ class Player:
         """
         Runs the given args in a subprocess.Popen, and then calls the function
         onExit when the subprocess completes.
-        onExit is a callable object, and popenArgs is a lists/tuple of args that 
+        onExit is a callable object, and popenArgs is a lists/tuple of args that
         would give to subprocess.Popen.
         """
         def runInThread(onExit, popenArgs):
@@ -88,7 +89,7 @@ class Player:
             else:
                 pass
 
-    # play another   
+    # play another
     def switch(self):
         self.stop()
         # wait process be killed
