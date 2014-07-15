@@ -246,6 +246,8 @@ class Menu:
 
     def dispatch_enter(self, idx):
         # The end of stack
+        if len(self.datalist) == 0:
+            return
         netease = self.netease
         datatype = self.datatype
         title = self.title
