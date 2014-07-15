@@ -16,7 +16,7 @@ NetEase-MusicBox
 7. 私人歌单
 8. 随心打碟
 9. 本地收藏（不提供下载）
-10. 精心设计的快捷键让操作丝般顺滑
+10. Vimer式快捷键让操作丝般顺滑
 
 ### 键盘快捷键
 
@@ -42,11 +42,28 @@ NetEase-MusicBox
 </table>
 
 
-### 安装
+### Mac安装
 
-	$ pip install netease-musicbox
+	$ sudo pip install netease-musicbox
 
-	$ brew install mpg123
+	$ sudo brew install mpg123
+
+### Linux安装
+
+	$ sudo pip install netease-musicbox
+
+	$ sudo apt-get install mpg123
+
+#### 错误处理
+
+1. pkg_resources.DistributionNotFound: requests
+	
+	$ sudo pip install requests
+
+2. pip: Command not found
+
+	$ sudo apt-get install python-pip
+	
 
 ### 使用
 
