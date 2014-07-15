@@ -222,18 +222,15 @@ class NetEase:
     def best_quality(self, song):
         url = song['mp3Url']
         bitrate = '160k'
-        if song.has_key('bMusic') and song['bMusic'].has_key('dfsId'):
-            best_fdsId = song['bMusic']['dfsId']
-            if song['bMusic'].has_key('bitrate'):
-                bitrate = str(song['bMusic']['bitrate']/1000) + 'k'
-        elif song.has_key('hMusic') and song['hMusic'].has_key('dfsId'):
-            best_fdsId = song['hMusic']['dfsId']
-            if song['hMusic'].has_key('bitrate'):
-                bitrate = str(song['hMusic']['bitrate']/1000) + 'k'
-        else:
+        best = song.get('bMusic', song.get('hMusic', None))
+        if not best:
             return [url, bitrate]
-        best_enc_Id = self.encrypted_id(str(best_fdsId))
-        url = "http://m1.music.126.net/%s/%s.mp3" %(best_enc_Id, best_fdsId)
+        dfsId = best.get('dfsId', None)
+
+        if dfsId:
+            enc_Id = self.encrypted_id(str(dfsId))
+            url = "http://m1.music.126.net/%s/%s.mp3" % (enc_Id, dfsId)
+            bitrate = str(best.get('bitrate', 0)/1000) + 'k'
         return [url, bitrate]
 
     def dig_info(self, data ,dig_type):
@@ -247,7 +244,8 @@ class NetEase:
                     'song_name': data[i]['name'],
                     'album_name': data[i]['album']['name'],
                     'mp3_url': url,
-                    'bitrate': bitrate
+                    'bitrate': bitrate,
+                    'cover_url': data[i]['album']['blurPicUrl']
                 }
                 if 'artist' in data[i]:
                     song_info['artist'] = data[i]['artist']
