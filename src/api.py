@@ -297,7 +297,8 @@ class NetEase:
                 'song_name': data['name'],
                 'artist': data['artists'][0]['name'],
                 'album_name': 'DJ节目',
-                'mp3_url': data['mp3Url']
+                'mp3_url': data['mp3Url'],
+                'bitrate': ''
                 }
             temp = channel_info    
 

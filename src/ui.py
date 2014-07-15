@@ -30,10 +30,10 @@ class Ui:
     	self.screen.move(2,1)
     	self.screen.clrtoeol()
     	if pause:
-    		self.screen.addstr(1, 6, '_ _ z Z Z  ' + bitrate, curses.color_pair(3))
+    		self.screen.addstr(1, 6, '_ _ z Z Z', curses.color_pair(3))
     	else:
-        	self.screen.addstr(1, 6, '♫  ♪ ♫  ♪  ' + bitrate, curses.color_pair(3))
-        self.screen.addstr(1, 23, song_name + '   -   ' + artist + '  < ' + album_name + ' >', curses.color_pair(4))
+        	self.screen.addstr(1, 6, '♫  ♪ ♫  ♪', curses.color_pair(3))
+        self.screen.addstr(1, 19, song_name + '   -   ' + artist + '  < ' + album_name + ' > ' + bitrate, curses.color_pair(4))
     	self.screen.refresh() 	
 
     def build_loading(self):
