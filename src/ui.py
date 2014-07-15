@@ -14,6 +14,7 @@ class Ui:
         self.screen = curses.initscr()
         # charactor break buffer
         curses.cbreak()
+        curses.noecho()
         self.screen.keypad(1)
         self.netease = NetEase()
         curses.start_color()
