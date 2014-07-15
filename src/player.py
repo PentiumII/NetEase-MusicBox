@@ -49,10 +49,24 @@ class Player:
         # returns immediately after the thread starts
         return thread
 
+    def notify(self, item, executable='notify-send'):
+        try:
+            cover_path = os.path.expanduser('~') + \
+                '/netease-musicbox/cover.jpg'
+            command = 'curl "%s" > /dev/null 2>&1 > %s && \
+                    notify-send -i %s "%s-%s  %s" > /dev/null 2>&1' % \
+                (item['cover_url'], cover_path,
+                    cover_path, item['album_name'],
+                    item['song_name'], item['artist'])
+            os.system(command)
+        except:
+            pass
+
     def recall(self):
         self.playing_flag = True
         item = self.songs[ self.idx ]
         self.ui.build_playinfo(item['song_name'], item['artist'], item['album_name'], bitrate=item['bitrate'])
+        self.notify(item)
         self.popen_recall(self.recall, item['mp3_url'])
 
     def play(self, datatype, songs, idx):
