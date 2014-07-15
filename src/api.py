@@ -64,7 +64,7 @@ class NetEase:
         try:
             return self.httpRequest('POST', action, data)
         except:
-            return {'code': 501}
+            return {'code': 401}
 
     # 用户歌单
     def user_playlist(self, uid, offset=0, limit=100):
