@@ -9,6 +9,7 @@ import re
 import json
 import requests
 import hashlib
+import md5
 
 
 # list去重
@@ -205,16 +206,48 @@ class NetEase:
 
         return channels
 
+    def encrypted_id(self, id):
+        byte1 = bytearray('3go8&$8*3*3h0k(2)2')
+        byte2 = bytearray(id)
+        byte1_len = len(byte1)
+        for i in xrange(len(byte2)):
+            byte2[i] = byte2[i]^byte1[i%byte1_len]
+        m = md5.new()
+        m.update(byte2)
+        result = m.digest().encode('base64')[:-1]
+        result = result.replace('/', '_')
+        result = result.replace('+', '-')
+        return result
+
+    def best_quality(self, song):
+        url = song['mp3Url']
+        bitrate = '160k'
+        if song.has_key('bMusic') and song['bMusic'].has_key('dfsId'):
+            best_fdsId = song['bMusic']['dfsId']
+            if song['bMusic'].has_key('bitrate'):
+                bitrate = str(song['bMusic']['bitrate']/1000) + 'k'
+        elif song.has_key('hMusic') and song['hMusic'].has_key('dfsId'):
+            best_fdsId = song['hMusic']['dfsId']
+            if song['hMusic'].has_key('bitrate'):
+                bitrate = str(song['hMusic']['bitrate']/1000) + 'k'
+        else:
+            return [url, bitrate]
+        best_enc_Id = self.encrypted_id(str(best_fdsId))
+        url = "http://m1.music.126.net/%s/%s.mp3" %(best_enc_Id, best_fdsId)
+        return [url, bitrate]
+
     def dig_info(self, data ,dig_type):
         temp = []
         if dig_type == 'songs':
             for i in range(0, len(data) ):
+                [url, bitrate] = self.best_quality(data[i])
                 song_info = {
                     'song_id': data[i]['id'],
                     'artist': [],
                     'song_name': data[i]['name'],
                     'album_name': data[i]['album']['name'],
-                    'mp3_url': data[i]['mp3Url']   
+                    'mp3_url': url,
+                    'bitrate': bitrate
                 }
                 if 'artist' in data[i]:
                     song_info['artist'] = data[i]['artist']
