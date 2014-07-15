@@ -90,7 +90,7 @@ class NetEase:
 
     # 新碟上架 http://music.163.com/#/discover/album/
     def new_albums(self, offset=0, limit=50):
-        action = '{0}album/new?area=ALL&offset={1}&total=true&limit='.format(api_endpoint, offset, limit)
+        action = '{0}album/new?area=ALL&offset={1}&total=true&limit={2}'.format(api_endpoint, offset, limit)
         try:
             data = self.httpRequest('GET', action)
             return data['albums']
