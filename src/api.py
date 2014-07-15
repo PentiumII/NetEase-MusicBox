@@ -151,7 +151,7 @@ class NetEase:
 
     # album id --> song id set
     def album(self, album_id):
-        action = 'http://music.163.com/api/album/' + str(album_id)
+        action = '{0}album/'.format(album_id)
         try:
             data = self.httpRequest('GET', action)
             return data['album']['songs']
@@ -163,7 +163,8 @@ class NetEase:
         tmpids = ids[offset:]
         tmpids = tmpids[0:100]
         tmpids = map(str, tmpids)
-        action = 'http://music.163.com/api/song/detail?ids=[' + (',').join(tmpids) + ']'
+        tmpids = ','.join(tmpids)
+        action = '{0}song/detail?ids=[{1}]'.format(api_endpoint, tmpids)
         try:
             data = self.httpRequest('GET', action)
             return data['songs']
@@ -172,7 +173,7 @@ class NetEase:
 
     # song id --> song url ( details )
     def song_detail(self, music_id):
-        action = "http://music.163.com/api/song/detail/?id=" + str(music_id) + "&ids=[" + str(music_id) + "]"
+        action = "{0}song/detail/?id={1}&ids=[{1}]".format(api_endpoint, music_id)
         try:
             data = self.httpRequest('GET', action)
             return data['songs']
@@ -197,14 +198,13 @@ class NetEase:
     def channel_detail(self, channelids, offset=0):
         channels = []
         for i in range(0, len(channelids)):
-            action = 'http://music.163.com/api/dj/program/detail?id=' + str(channelids[i])
+            action = '{0}dj/program/detail?id='.format(channelids[i])
             try:
                 data = self.httpRequest('GET', action)
-                channel = self.dig_info( data['program']['mainSong'], 'channels' )
+                channel = self.dig_info(data['program']['mainSong'], 'channels')
                 channels.append(channel)
             except:
                 continue
-
         return channels
 
     def dig_info(self, data ,dig_type):
