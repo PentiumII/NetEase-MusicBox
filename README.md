@@ -60,11 +60,14 @@ NetEase-MusicBox
 	
 	$ sudo pip install requests
 
+如果是运行 $ musicbox 出错
+
+	$ sudo pip install --upgrade setuptools
+
 2. pip: Command not found
 
 	$ sudo apt-get install python-pip
 	
-
 ### 使用
 
 	$ musicbox
