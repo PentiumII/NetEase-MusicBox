@@ -14,7 +14,6 @@ class Ui:
         self.screen = curses.initscr()
         # charactor break buffer
         curses.cbreak()
-        curses.noecho()
         self.screen.keypad(1)
         self.netease = NetEase()
         curses.start_color()
@@ -24,6 +23,7 @@ class Ui:
         curses.init_pair(4, curses.COLOR_YELLOW, curses.COLOR_BLACK)        
 
     def build_playinfo(self, song_name, artist, album_name, pause=False):
+        curses.noecho()
         # refresh top 2 line
         self.screen.move(1,1)
         self.screen.clrtoeol()
@@ -42,6 +42,7 @@ class Ui:
 
     def build_menu(self, datatype, title, datalist, offset, index, step):
     	# keep playing info in line 1
+        curses.noecho()
         self.screen.move(4,1)
         self.screen.clrtobot()
         self.screen.addstr(4, 19, title, curses.color_pair(1))
@@ -172,6 +173,7 @@ class Ui:
     	return x
 
     def build_login(self):
+        curses.noecho()
         info = self.get_param('请输入登录信息， e.g: john@163.com 123456')
         account = info.split(' ')
         if len(account) != 2:
@@ -199,6 +201,7 @@ class Ui:
 
     def get_param(self, prompt_string):
   		# keep playing info in line 1    	
+        curses.echo()
         self.screen.move(4,1)
         self.screen.clrtobot()
         self.screen.addstr(5, 19, prompt_string, curses.color_pair(1))
