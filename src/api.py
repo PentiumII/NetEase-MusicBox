@@ -18,7 +18,8 @@ def uniq(arr):
     return arr2
 
 default_timeout = 10
-api_endpoint = 'http://music.163.com/api/'
+base_url = 'http://music.163.com/'
+api_endpoint = '{0}api/'.format()
 
 
 class NetEase:
@@ -65,7 +66,7 @@ class NetEase:
         try:
             return self.httpRequest('POST', action, data)
         except:
-            return {'code': 401}
+            return {'code': 501}
 
     # 用户歌单
     def user_playlist(self, uid, offset=0, limit=100):
@@ -127,7 +128,7 @@ class NetEase:
 
     # 热门单曲 http://music.163.com/#/discover/toplist 50
     def top_songlist(self, offset=0, limit=100):
-        action = 'http://music.163.com/discover/toplist'
+        action = '{0}discover/toplist'.format(base_url)
         try:
             connection = requests.get(action, headers=self.header, timeout=default_timeout)
             connection.encoding = 'UTF-8'
@@ -142,7 +143,7 @@ class NetEase:
 
     # 歌手单曲
     def artists(self, artist_id):
-        action = 'http://music.163.com/api/artist/' + str(artist_id)
+        action = '{0}artist/'.format(artist_id)
         try:
             data = self.httpRequest('GET', action)
             return data['hotSongs']
@@ -183,7 +184,7 @@ class NetEase:
 
     # 今日最热（0）, 本周最热（10），历史最热（20），最新节目（30）
     def djchannels(self, stype=0, offset=0, limit=50):
-        action = 'http://music.163.com/discover/djchannel?type=' + str(stype) + '&offset=' + str(offset) + '&limit=' + str(limit)
+        action = '{0}discover/djchannel?type={1}&offset={2}&limit='.format(base_url, type, offset, limit)
         try:
             connection = requests.get(action, headers=self.header, timeout=default_timeout)
             connection.encoding = 'UTF-8'
