@@ -51,8 +51,10 @@ NetEase-MusicBox
 ### Linux安装
 
 	$ sudo pip install netease-musicbox
-
+##### Ubuntu
 	$ sudo apt-get install mpg123
+##### Fedora (rpmfusion needed)
+	$ sudo yum install mpg123
 	
 ### 使用
 
