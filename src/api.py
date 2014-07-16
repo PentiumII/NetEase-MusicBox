@@ -19,7 +19,7 @@ def uniq(arr):
 
 default_timeout = 10
 base_url = 'http://music.163.com/'
-api_endpoint = '{0}api/'.format()
+api_endpoint = '{0}api/'.format(base_url)
 
 
 class NetEase:
