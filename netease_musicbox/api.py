@@ -144,7 +144,7 @@ class NetEase:
 
     # 歌手单曲
     def artists(self, artist_id):
-        action = '{0}artist/'.format(artist_id)
+        action = '{0}artist/{1}'.format(api_endpoint, artist_id)
         try:
             data = self.httpRequest('GET', action)
             return data['hotSongs']
@@ -153,7 +153,7 @@ class NetEase:
 
     # album id --> song id set
     def album(self, album_id):
-        action = '{0}album/'.format(album_id)
+        action = '{0}album/{1}'.format(api_endpoint, album_id)
         try:
             data = self.httpRequest('GET', action)
             return data['album']['songs']
@@ -185,7 +185,7 @@ class NetEase:
 
     # 今日最热（0）, 本周最热（10），历史最热（20），最新节目（30）
     def djchannels(self, stype=0, offset=0, limit=50):
-        action = '{0}discover/djchannel?type={1}&offset={2}&limit='.format(base_url, type, offset, limit)
+        action = '{0}discover/djchannel?type={1}&offset={2}&limit={3}'.format(base_url, stype, offset, limit)
         try:
             connection = requests.get(action, headers=self.header, timeout=default_timeout)
             connection.encoding = 'UTF-8'
@@ -200,7 +200,7 @@ class NetEase:
     def channel_detail(self, channelids, offset=0):
         channels = []
         for i in range(0, len(channelids)):
-            action = '{0}dj/program/detail?id='.format(channelids[i])
+            action = '{0}dj/program/detail?id={1}'.format(api_endpoint, channelids[i])
             try:
                 data = self.httpRequest('GET', action)
                 channel = self.dig_info(data['program']['mainSong'], 'channels')
