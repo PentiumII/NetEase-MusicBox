@@ -7,7 +7,7 @@ NetEase-MusicBox
 
 ### 功能特性
 
-1. 320kps的高品质音乐
+1. 320kps的高品质音乐，根据网络情况自动切换码率
 2. 歌曲，艺术家，专辑检索
 3. 网易热门歌曲排行榜
 4. 网易新碟推荐
@@ -53,27 +53,28 @@ NetEase-MusicBox
 	$ sudo pip install netease-musicbox
 
 	$ sudo apt-get install mpg123
-
-#### 错误处理
-
-1. pkg_resources.DistributionNotFound: requests
-	
-	$ sudo pip install requests
-
-如果是运行 $ musicbox 出错
-
-	$ sudo pip install --upgrade setuptools
-
-2. pip: Command not found
-
-	$ sudo apt-get install python-pip
 	
 ### 使用
 
 	$ musicbox
 
-
 Enjoy it !
+
+
+### 错误处理
+
+##### pkg_resources.DistributionNotFound: requests  
+
+	$ sudo pip install requests
+
+如果是运行 $ musicbox 出错  
+
+	$ sudo pip install --upgrade setuptools
+
+##### pip: Command not found  
+
+	$ sudo apt-get install python-pip
+
 
 ### The MIT License (MIT)
 

@@ -47,6 +47,8 @@ shortcut = [
     ['q', 'Quit      ', '退出']
 ]
 
+CONTROL_B = 2
+CONTROL_F = 6
 
 class Menu:
     def __init__(self):
@@ -106,7 +108,7 @@ class Menu:
                 self.index = carousel(offset, min( len(datalist), offset + step) - 1, idx+1 )
 
             # 向上翻页
-            elif key == ord('u'):
+            elif key in (ord('u'), CONTROL_B):
                 if offset == 0:
                     continue
                 self.offset -= step
@@ -115,7 +117,7 @@ class Menu:
                 self.index = (index-step)//step*step
 
             # 向下翻页
-            elif key == ord('d'):
+            elif key in (ord('d'), CONTROL_F):
                 if offset + step >= len( datalist ):
                     continue
                 self.offset += step

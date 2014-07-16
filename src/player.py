@@ -17,7 +17,6 @@ from ui import Ui
 # carousel x in [left, right]
 carousel = lambda left, right, x: left if (x>right) else (right if x<left else x)
 
-
 class Player:
 
     def __init__(self):
@@ -29,6 +28,7 @@ class Player:
         self.pause_flag = False
         self.songs = []
         self.idx = 0
+        self.q_level = 0
 
     def popen_recall(self, onExit, popenArgs):
         """
@@ -39,11 +39,24 @@ class Player:
         """
         def runInThread(onExit, popenArgs):
             self.popen_handler = subprocess.Popen(['mpg123', popenArgs], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+       
+            # auto decrease quality level , [hMusic, bMusic, mMusic, defaultMusic, lMusic]    
+            if self.q_level != 4:
+                count = 20
+                for line in self.popen_handler.stderr:
+                    if count == 0:
+                        self.q_level += 2
+                        self.next()
+                        return
+                    count -= 1
+
             self.popen_handler.wait()
             if self.playing_flag:
                 self.idx = carousel(0, len(self.songs)-1, self.idx+1 )
                 onExit()
             return
+
+
         thread = threading.Thread(target=runInThread, args=(onExit, popenArgs))
         thread.start()
         # returns immediately after the thread starts
@@ -74,9 +87,9 @@ class Player:
     def recall(self):
         self.playing_flag = True
         item = self.songs[ self.idx ]
-        self.ui.build_playinfo(item['song_name'], item['artist'], item['album_name'], bitrate=item['bitrate'])
         self.notify(item)
-        self.popen_recall(self.recall, item['mp3_url'])
+        self.ui.build_playinfo(item['song_name'], item['artist'], item['album_name'], item['mp3'][self.q_level]['bitrate'])
+        self.popen_recall(self.recall, item['mp3'][self.q_level]['mp3_url'])
 
     def play(self, datatype, songs, idx):
         # if same playlists && idx --> same song :: pause/resume it
@@ -127,13 +140,13 @@ class Player:
         self.pause_flag = True
         os.kill(self.popen_handler.pid, signal.SIGSTOP)
         item = self.songs[ self.idx ]
-        self.ui.build_playinfo(item['song_name'], item['artist'], item['album_name'], bitrate=item['bitrate'], pause=True)
+        self.ui.build_playinfo(item['song_name'], item['artist'], item['album_name'], bitrate=item['mp3'][self.q_level]['bitrate'], pause=True)
 
     def resume(self):
         self.pause_flag = False
         os.kill(self.popen_handler.pid, signal.SIGCONT)
         item = self.songs[ self.idx ]
-        self.ui.build_playinfo(item['song_name'], item['artist'], item['album_name'], bitrate=item['bitrate'])
+        self.ui.build_playinfo(item['song_name'], item['artist'], item['album_name'], bitrate=item['mp3'][self.q_level]['bitrate'])
 
     def next(self):
         self.stop()

@@ -37,7 +37,7 @@ class Ui:
     	self.screen.refresh() 	
 
     def build_loading(self):
-        self.screen.addstr(6, 19, '享受高品质音乐，loading...', curses.color_pair(1))
+        self.screen.addstr(6, 19, '尽享高品质音乐...', curses.color_pair(1))
         self.screen.refresh()        
 
     def build_menu(self, datatype, title, datalist, offset, index, step):

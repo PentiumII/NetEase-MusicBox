@@ -206,9 +206,10 @@ class NetEase:
 
         return channels
 
-    def encrypted_id(self, id):
+    def encrypted_id(self, dfsId):
+        dfsId =  str(dfsId)
         byte1 = bytearray('3go8&$8*3*3h0k(2)2')
-        byte2 = bytearray(id)
+        byte2 = bytearray(dfsId)
         byte1_len = len(byte1)
         for i in xrange(len(byte2)):
             byte2[i] = byte2[i]^byte1[i%byte1_len]
@@ -219,33 +220,55 @@ class NetEase:
         result = result.replace('+', '-')
         return result
 
-    def best_quality(self, song):
-        url = song['mp3Url']
-        bitrate = '160k'
-        best = song.get('bMusic', song.get('hMusic', None))
-        if not best:
-            return [url, bitrate]
-        dfsId = best.get('dfsId', None)
+    def make_url(self, dfsId):
+        encId = self.encrypted_id(dfsId)
+        mp3_url = "http://m1.music.126.net/%s/%s.mp3" % (encId, dfsId)
+        return mp3_url
 
-        if dfsId:
-            enc_Id = self.encrypted_id(str(dfsId))
-            url = "http://m1.music.126.net/%s/%s.mp3" % (enc_Id, dfsId)
-            bitrate = str(best.get('bitrate', 0)/1000) + 'k'
-        return [url, bitrate]
+    def mp3_quality(self, song):
+        defualtMusic = {'mp3_url': song['mp3Url'], 'bitrate': ''}
+        try:
+            hMusic = song.get('hMusic')
+            hMusic['mp3_url'] = self.make_url(hMusic.get('dfsId'))
+            hMusic['bitrate'] = str(hMusic.get('bitrate', 0)/1000) + 'kps'
+        except:
+            hMusic = defualtMusic
+
+        try:
+            mMusic = song.get('mMusic')
+            mMusic['mp3_url'] = self.make_url(mMusic.get('dfsId'))
+            mMusic['bitrate'] = str(mMusic.get('bitrate', 0)/1000) + 'kps'
+        except:
+            hMusic = defualtMusic
+
+        try:
+            lMusic = song.get('lMusic')
+            lMusic['mp3_url'] = self.make_url(lMusic.get('dfsId'))
+            lMusic['bitrate'] = str(lMusic.get('bitrate', 0)/1000) + 'kps'
+        except:
+            hMusic = defualtMusic
+
+        try:
+            bMusic = song.get('bMusic')
+            bMusic['mp3_url'] = self.make_url(bMusic.get('dfsId'))
+            bMusic['bitrate'] = str(bMusic.get('bitrate', 0)/1000) + 'kps'
+        except:
+            hMusic = defualtMusic
+
+        # quility decrease
+        return [hMusic, bMusic, defualtMusic, mMusic, lMusic]
 
     def dig_info(self, data ,dig_type):
         temp = []
         if dig_type == 'songs':
             for i in range(0, len(data) ):
-                [url, bitrate] = self.best_quality(data[i])
                 song_info = {
                     'song_id': data[i]['id'],
                     'artist': [],
                     'song_name': data[i]['name'],
                     'album_name': data[i]['album']['name'],
-                    'mp3_url': url,
-                    'bitrate': bitrate,
-                    'cover_url': data[i]['album']['blurPicUrl']
+                    'cover_url': data[i]['album']['blurPicUrl'],
+                    'mp3': self.mp3_quality(data[i])
                 }
                 if 'artist' in data[i]:
                     song_info['artist'] = data[i]['artist']
@@ -295,8 +318,7 @@ class NetEase:
                 'song_name': data['name'],
                 'artist': data['artists'][0]['name'],
                 'album_name': 'DJ节目',
-                'mp3_url': data['mp3Url'],
-                'bitrate': ''
+                'mp3': self.mp3_quality(data)
                 }
             temp = channel_info    
 
