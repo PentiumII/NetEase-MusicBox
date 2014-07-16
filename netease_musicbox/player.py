@@ -65,6 +65,12 @@ class Player:
 
     def notify(self, item, executable='notify-send'):
         try:
+            try:
+                msg = 'display notification "' + item['artist'] + '   < ' + item['album_name'] + ' >' + '" with title "' + item['song_name'] +'"'
+                subprocess.Popen(['osascript', '-e', msg])
+            except:
+                pass
+        except:
             cover_path = os.path.expanduser('~') + \
                 '/netease-musicbox/cover.jpg'
             song_info = "%s-%s \n %s"  \
@@ -78,19 +84,13 @@ class Player:
                 handler.wait()
                 handler = subprocess.Popen(['notify-send', '-i', cover_path, '-t', '3000', song_info], 
                         stdout=fnull, stderr=subprocess.STDOUT)
-        except:
-            try:
-                msg = 'display notification "' + item['artist'] + '   < ' + item['album_name'] + ' >' + '" with title "' + item['song_name'] +'"'
-                subprocess.Popen(['osascript', '-e', msg])
-            except:
-                pass
 
     def recall(self):
         self.playing_flag = True
         item = self.songs[ self.idx ]
         self.ui.build_playinfo(item['song_name'], item['artist'], item['album_name'], item['mp3'][self.q_level]['bitrate'])
-        self.notify(item)
         self.popen_recall(self.recall, item['mp3'][self.q_level]['mp3_url'])
+        self.notify(item)
 
     def play(self, datatype, songs, idx):
         # if same playlists && idx --> same song :: pause/resume it
