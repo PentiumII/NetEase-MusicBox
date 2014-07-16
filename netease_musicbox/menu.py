@@ -333,7 +333,10 @@ class Menu:
                     user_info = data[0]
                     self.account = data[1]
 
-                self.username = user_info['profile']['nickname']
+                try:
+                    self.username = user_info['profile']['nickname']
+                except:
+                    self.username = user_info['account']['userName']
                 self.userid = user_info['account']['id']
             # 读取登录之后的用户歌单
             myplaylist = netease.user_playlist( self.userid )
