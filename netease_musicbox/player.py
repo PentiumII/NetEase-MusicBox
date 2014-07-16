@@ -87,8 +87,8 @@ class Player:
     def recall(self):
         self.playing_flag = True
         item = self.songs[ self.idx ]
-        self.notify(item)
         self.ui.build_playinfo(item['song_name'], item['artist'], item['album_name'], item['mp3'][self.q_level]['bitrate'])
+        self.notify(item)
         self.popen_recall(self.recall, item['mp3'][self.q_level]['mp3_url'])
 
     def play(self, datatype, songs, idx):

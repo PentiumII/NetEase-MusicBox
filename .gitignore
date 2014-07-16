@@ -1,5 +1,6 @@
 src/*.pyc
-src/doubanfmapi.py
+src/
+netease_musicbox/*.pyc
 build/
 dist/
 NetEase_MusicBox.egg-info/
