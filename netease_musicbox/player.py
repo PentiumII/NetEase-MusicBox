@@ -96,7 +96,7 @@ class Player:
         # if same playlists && idx --> same song :: pause/resume it
         self.datatype = datatype
 
-        if datatype == 'songs' or datatype == 'djchannels':
+        if len(songs) and (datatype == 'songs' or datatype == 'djchannels'):
             if idx == self.idx and songs == self.songs:
                 if self.pause_flag:
                     self.resume()

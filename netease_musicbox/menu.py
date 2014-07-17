@@ -165,9 +165,9 @@ class Menu:
 
             # 播放、暂停
             elif key == ord(' '):
-                if datatype == 'songs':
+                if datatype == 'songs' and len(datalist) != 0:
                     self.presentsongs = ['songs', title, datalist, offset, index]
-                elif datatype == 'djchannels':
+                elif datatype == 'djchannels' and len(datalist) != 0:
                     self.presentsongs = ['djchannels', title, datalist, offset, index]
                 self.player.play(datatype, datalist, idx)
                 time.sleep(0.1)
