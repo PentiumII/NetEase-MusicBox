@@ -28,24 +28,26 @@ code = locale.getpreferredencoding()
 carousel = lambda left, right, x: left if (x>right) else (right if x<left else x)
 
 shortcut = [
-    ['j', 'Down      ', '下移'],
-    ['k', 'Up        ', '上移'],
-    ['h', 'Back      ', '后退'],
-    ['l', 'Forward   ', '前进'],
-    ['u', 'Prev page ', '上一页'],
-    ['d', 'Next page ', '下一页'],
-    ['f', 'Search    ', '快速搜索'],
-    ['[', 'Prev song ', '上一曲'],
-    [']', 'Next song ', '下一曲'],
-    [' ', 'Play/Pause', '播放/暂停'],
-    ['m', 'Menu      ', '主菜单'],
-    ['p', 'Present   ', '当前播放列表'],
-    ['a', 'Add       ', '添加曲目到打碟'],
-    ['z', 'DJ list   ', '打碟列表'],
-    ['s', 'Star      ', '添加到收藏'],
-    ['c', 'Collection', '收藏列表'],
-    ['r', 'Remove    ', '删除当前条目'],
-    ['q', 'Quit      ', '退出']
+    ['j', 'Down       ', '下移'],
+    ['k', 'Up         ', '上移'],
+    ['h', 'Back       ', '后退'],
+    ['l', 'Forward    ', '前进'],
+    ['u', 'Prev page  ', '上一页'],
+    ['d', 'Next page  ', '下一页'],
+    ['f', 'Search     ', '快速搜索'],
+    ['[', 'Prev song  ', '上一曲'],
+    [']', 'Next song  ', '下一曲'],
+    [' ', 'Play/Pause ', '播放/暂停'],
+    ['m', 'Menu       ', '主菜单'],
+    ['p', 'Present    ', '当前播放列表'],
+    ['a', 'Add        ', '添加曲目到打碟'],
+    ['A', 'Add page   ', '添加本页到打碟'],
+    ['z', 'DJ list    ', '打碟列表'],
+    ['s', 'Star       ', '添加到收藏'],
+    ['c', 'Collection ', '收藏列表'],
+    ['r', 'Remove     ', '删除当前条目'],
+    ['R', 'Remove page', '删除本页所有条目'],
+    ['q', 'Quit       ', '退出']
 ]
 
 CONTROL_B = 2
@@ -113,18 +115,14 @@ class Menu:
                 if offset == 0:
                     continue
                 self.offset -= step
-
-                # e.g. 23 - 10 = 13 --> 10
-                self.index = (index-step)//step*step
+                self.index = self.offset
 
             # 向下翻页
             elif key in (ord('d'), CONTROL_F):
                 if offset + step >= len( datalist ):
                     continue
                 self.offset += step
-
-                # e.g. 23 + 10 = 33 --> 30
-                self.index = (index+step)//step*step
+                self.index = self.offset
 
             # 前进
             elif key == ord('l') or key == 10:
@@ -192,6 +190,11 @@ class Menu:
                 elif datatype == 'artists':
                     pass
 
+            # 添加当前页面到打碟
+            elif key == ord('A'):
+                if datatype == 'songs' and len(datalist) != 0:
+                    self.djstack.extend( datalist[offset:offset+step] )
+
             # 加载打碟歌单
             elif key == ord('z'):
                 self.stack.append( [datatype, title, datalist, offset, index] )
@@ -215,12 +218,23 @@ class Menu:
                 self.offset = 0
                 self.index = 0
 
-            # 从当前列表移除
+            # 从当前列表移除条目
             elif key == ord('r'):
-                if datatype != 'main' and len(datalist) != 0:
+                if datatype != 'main' and datatype != 'help' and len(datalist) != 0:
                     self.datalist.pop(idx)
                     self.index = carousel(offset, min( len(datalist), offset + step) - 1, idx )
 
+            # 移除当前页面所有
+            elif key == ord('R'):
+                if datatype != 'main' and datatype != 'help' and len(datalist) != 0:
+                    for i in range(0, step):
+                        try:
+                            self.datalist.pop(offset)
+                        except:
+                            pass
+                    self.index = self.offset = max(0, offset-step)
+
+            # 回到主菜单
             elif key == ord('m'):
                 if datatype != 'main':
                     self.stack.append( [datatype, title, datalist, offset, index] )
@@ -230,6 +244,7 @@ class Menu:
                     self.offset = 0
                     self.index = 0
 
+            # go to github
             elif key == ord('g'):
                 if datatype == 'help':
                     webbrowser.open_new_tab('https://github.com/vellow/NetEase-MusicBox')

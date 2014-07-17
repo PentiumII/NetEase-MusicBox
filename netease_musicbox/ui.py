@@ -100,9 +100,9 @@ class Ui:
             elif datatype == 'help':
                 for i in range(offset, min( len(datalist), offset+step) ):
                     if i == index:
-                        self.screen.addstr(i - offset +8, 16, '-> ' + str(i) + '. \'' + datalist[i][0].upper() + '\'   ' + datalist[i][1] + '   ' + datalist[i][2], curses.color_pair(2))
+                        self.screen.addstr(i - offset +8, 16, '-> ' + str(i) + '. \'' + datalist[i][0] + '\'   ' + datalist[i][1] + '   ' + datalist[i][2], curses.color_pair(2))
                     else:
-                        self.screen.addstr(i - offset +8, 19, str(i) + '. \'' + datalist[i][0].upper() + '\'   ' + datalist[i][1] + '   ' + datalist[i][2])
+                        self.screen.addstr(i - offset +8, 19, str(i) + '. \'' + datalist[i][0] + '\'   ' + datalist[i][1] + '   ' + datalist[i][2])
                 self.screen.addstr(20, 6, 'NetEase-MusicBox 基于Python，所有版权音乐来源于网易，本地不做任何保存')
                 self.screen.addstr(21, 10, '按 [G] 到 Github 了解更多信息，帮助改进，或者Star表示支持~~')
                 self.screen.addstr(22, 19, 'Build with love to music by @vellow')
@@ -180,9 +180,8 @@ class Ui:
         self.screen.clrtobot()
         self.screen.addstr(8, 19, '选择登录类型:', curses.color_pair(1))
         self.screen.addstr(10,19, '[1] 手机号登录')
-        self.screen.addstr(11,19, '[2] 微博账号登录')
-        self.screen.addstr(12,19, '[3] 网易通行证登录')
-        self.screen.addstr(16,19, '请键入对应数字:', curses.color_pair(2))
+        self.screen.addstr(11,19, '[2] 网易通行证登录')
+        self.screen.addstr(15,19, '请键入对应数字:', curses.color_pair(2))
         self.screen.refresh()
         x = self.screen.getch()
         return x
@@ -193,8 +192,6 @@ class Ui:
         if x == ord('1'):
             login_type = 'cellphone'
         elif x == ord('2'):
-            login_type = 'sns'
-        elif x == ord('3'):
             login_type = 'passport'
         else:
             return -1
