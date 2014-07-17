@@ -77,6 +77,17 @@ Enjoy it !
 
 	$ sudo apt-get install python-pip
 
+##### locale.Error: unsupported locale setting, 以及中文乱码
+
+    $ sudo apt-get install language-pack-en-base
+    $ sudo dpkg-reconfigure locales
+
+如果使用zsh, `vim ~/.zshrc`,添加
+
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+`$ source ~/.zshrc`
 
 ### The MIT License (MIT)
 
