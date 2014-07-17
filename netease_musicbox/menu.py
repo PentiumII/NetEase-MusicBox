@@ -316,28 +316,10 @@ class Menu:
             self.title += ' > 精选歌单'
             self.datatype = 'playlists'
 
-        # 我的歌单
+        # 我的歌单/登录
         elif idx == 4:
-            # 未登录
-            if self.userid is None:
-                # 使用本地存储了账户登录
-                if self.account:
-                    user_info = netease.login(self.account[0], self.account[1])
-
-                # 本地没有存储账户，或本地账户失效，则引导录入
-                if self.account == {} or user_info['code'] != 200:
-                    data = self.ui.build_login()
-                    # 取消登录
-                    if data == -1:
-                        return
-                    user_info = data[0]
-                    self.account = data[1]
-
-                try:
-                    self.username = user_info['profile']['nickname']
-                except:
-                    self.username = user_info['account']['userName']
-                self.userid = user_info['account']['id']
+            if self.login() == -1:
+                return
             # 读取登录之后的用户歌单
             myplaylist = netease.user_playlist( self.userid )
             self.datalist = netease.dig_info(myplaylist, 'playlists')
@@ -374,6 +356,28 @@ class Menu:
 
         self.offset = 0
         self.index = 0
+
+    def login(self):
+        # 未登录
+        if self.userid is None:
+            # 使用本地存储了账户登录
+            if self.account:
+                user_info = self.netease.login( self.account[0], self.account[1], self.account[2])
+
+            # 本地没有存储账户，或本地账户失效，则引导录入
+            if self.account == {} or user_info['code'] != 200:
+                data = self.ui.build_login()
+                # 取消登录
+                if data == -1:
+                    return -1
+                user_info = data[0]
+                self.account = data[1]
+
+            try:
+                self.username = user_info['profile']['nickname']
+            except:
+                self.username = user_info['account']['userName']
+            self.userid = user_info['account']['id']        
 
     def search(self):
         ui = self.ui

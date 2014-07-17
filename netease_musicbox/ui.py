@@ -175,13 +175,37 @@ class Ui:
     	x = self.screen.getch()
     	return x
 
+    def build_login_menu(self):
+        self.screen.move(4,1)
+        self.screen.clrtobot()
+        self.screen.addstr(8, 19, '选择登录类型:', curses.color_pair(1))
+        self.screen.addstr(10,19, '[1] 手机号登录')
+        self.screen.addstr(11,19, '[2] 微博账号登录')
+        self.screen.addstr(12,19, '[3] 网易通行证登录')
+        self.screen.addstr(16,19, '请键入对应数字:', curses.color_pair(2))
+        self.screen.refresh()
+        x = self.screen.getch()
+        return x
+
     def build_login(self):
         curses.noecho()
+        x = self.build_login_menu()
+        if x == ord('1'):
+            login_type = 'cellphone'
+        elif x == ord('2'):
+            login_type = 'sns'
+        elif x == ord('3'):
+            login_type = 'passport'
+        else:
+            return -1
+
         info = self.get_param('请输入登录信息， e.g: john@163.com 123456')
         account = info.split(' ')
         if len(account) != 2:
             return self.build_login()
-        login_info = self.netease.login(account[0], account[1])
+        account.append(login_type)
+        # account[username, password, login_type]
+        login_info = self.netease.login(account[0], account[1], account[2])
         if login_info['code'] != 200:
             x = self.build_login_error()
             if x == ord('1'):

@@ -57,13 +57,23 @@ class NetEase:
         return connection
 
     # 登录
-    def login(self, username, password):
-        action = '{0}login/'.format(api_endpoint)
-        data = {
-            'username': username,
-            'password': hashlib.md5( password ).hexdigest(),
-            'rememberLogin': 'true'
-        }
+    def login(self, username, password, login_type):
+        if login_type == 'passport':
+            action = '{0}login/'.format(api_endpoint)
+            data = {
+                'username': username,
+                'password': hashlib.md5( password ).hexdigest(),
+                'rememberLogin': 'true'
+            }
+
+        elif login_type == 'cellphone':
+            action = '{0}login/cellphone/'.format(api_endpoint)
+            data = {
+                'phone': username,
+                'password': hashlib.md5( password ).hexdigest(),
+                'rememberLogin': 'true'
+            }
+
         try:
             return self.httpRequest('POST', action, data)
         except:
