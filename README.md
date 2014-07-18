@@ -91,6 +91,10 @@ Enjoy it !
 
 `$ source ~/.zshrc`
 
+### About Music CopyRight
+    NetEase-MusicBox would never provide music download in any form, and this shall 
+    be included in all copies or substantial portions of the Software.   
+
 ### The MIT License (MIT)
 
 CopyRight (c) 2014 vellow  &lt;<a href="mailto:i@vellow.net">i@vellow.net</a>&gt;
